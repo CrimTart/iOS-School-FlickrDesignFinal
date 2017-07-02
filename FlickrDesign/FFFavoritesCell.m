@@ -7,8 +7,6 @@
 //
 
 #import "FFFavoritesCell.h"
-#import "UIColor+FFColor.h"
-#import "UIFont+FFFonts.h"
 
 #import "Masonry.h"
 
@@ -21,7 +19,7 @@
 -(instancetype) initWithStyle: (UITableViewCellStyle)style reuseIdentifier: (NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.backgroundColor = [UIColor myGray];
+        self.backgroundColor = [UIColor colorWithRed:250/255.0 green:250/255.0 blue:250/255.0 alpha:0.9];
         _photoView = [UIImageView new];
         [_photoView setAutoresizingMask:YES];
         _photoView.clipsToBounds = YES;

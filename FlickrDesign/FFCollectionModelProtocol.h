@@ -7,8 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "FFNetworkProtocol.h"
-#import "FFStorageProtocol.h"
+#import "FFFacade.h"
 
 @class UIImage;
 @class FFItem;
@@ -29,9 +28,7 @@ typedef void (^voidBlock)(void);
 
 -(void) clearModel;
 
--(id<FFNetworkProtocol>) getNetworkManager;
-
--(id<FFStorageProtocol>) getStorageService;
+-(FFFacade *) getFacade;
 
 -(void) pauseDownloads;
 

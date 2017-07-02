@@ -12,7 +12,6 @@
 #import "FFItem.h"
 #import "FFCollectionModel.h"
 #import "FFPostView.h"
-#import "UIColor+FFColor.h"
 #import "Masonry.h"
 
 @interface FFPostController () <UITableViewDelegate, FFCellsDelegate, UIScrollViewDelegate>
@@ -47,8 +46,8 @@
     
     CGRect frame = self.view.frame;
     self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(frame), CGRectGetHeight(frame))];
-    self.tableView.backgroundColor = [UIColor myGray];
-    self.tableView.separatorColor = [UIColor separatorColor];
+    self.tableView.backgroundColor = [UIColor colorWithRed:250/255.0 green:250/255.0 blue:250/255.0 alpha:0.9];
+    self.tableView.separatorColor = [UIColor colorWithRed:151/255.0 green:151/255.0 blue:151/255.0 alpha:1];
     [self.view addSubview:self.tableView];
     [self.tableView registerClass:[FFImageCell class] forCellReuseIdentifier:@"imageCell"];
     [self.tableView registerClass:[FFCommentsCell class] forCellReuseIdentifier:@"commentsCell"];
@@ -69,7 +68,7 @@
 }
 
 -(void) tableView: (UITableView *)tableView willDisplayFooterView: (UIView *)view forSection: (NSInteger)section {
-    view.backgroundColor = [UIColor myGray];
+    view.backgroundColor = [UIColor colorWithRed:250/255.0 green:250/255.0 blue:250/255.0 alpha:0.9];
 }
 
 -(CGFloat) tableView: (UITableView *)tableView heightForRowAtIndexPath: (NSIndexPath *)indexPath {

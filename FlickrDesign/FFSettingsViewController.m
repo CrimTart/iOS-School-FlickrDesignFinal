@@ -9,7 +9,6 @@
 //Facade --- DataStorage (destroyevrythng)
 
 #import "FFSettingsViewController.h"
-#import "UIColor+FFColor.h"
 
 @interface FFSettingsViewController () <UITableViewDelegate, UITableViewDataSource>
 
@@ -37,7 +36,7 @@
     _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, CGRectGetWidth(frame), CGRectGetHeight(frame) - 64)];
     _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     
-    _tableView.backgroundColor = [UIColor myGray];
+    _tableView.backgroundColor = [UIColor colorWithRed:250/255.0 green:250/255.0 blue:250/255.0 alpha:0.9];
     _tableView.opaque = YES;
     self.view.backgroundColor = [UIColor whiteColor];
     [self.view addSubview: _tableView];

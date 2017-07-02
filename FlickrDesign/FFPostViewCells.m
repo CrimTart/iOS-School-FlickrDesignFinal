@@ -7,8 +7,6 @@
 //
 
 #import "FFPostViewCells.h"
-#import "UIFont+FFFonts.h"
-#import "UIColor+FFColor.h"
 #import "Masonry.h"
 
 
@@ -23,7 +21,7 @@
 -(instancetype) initWithStyle: (UITableViewCellStyle)style reuseIdentifier: (NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.backgroundColor = [UIColor myGray];
+        self.backgroundColor = [UIColor colorWithRed:250/255.0 green:250/255.0 blue:250/255.0 alpha:0.9];
         _photoView = [UIImageView new];
         _photoView.contentMode = UIViewContentModeScaleAspectFill;
         [_photoView setAutoresizingMask:YES];
@@ -152,7 +150,7 @@
 -(instancetype) initWithStyle: (UITableViewCellStyle)style reuseIdentifier: (NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier: reuseIdentifier];
     if (self) {
-        self.backgroundColor = [UIColor myGray];
+        self.backgroundColor = [UIColor colorWithRed:250/255.0 green:250/255.0 blue:250/255.0 alpha:0.9];
         _avatarImageView = [UIImageView new];
         _avatarImageView.backgroundColor = [UIColor blueColor];
         [_avatarImageView setAutoresizingMask:YES];
@@ -161,12 +159,12 @@
         [self.contentView addSubview:_avatarImageView];
         
         _nameLabel = [UILabel new];
-        _nameLabel.font = [UIFont sanFranciscoDisplayMedium14];
+        _nameLabel.font = [UIFont fontWithName:@"SanFranciscoDisplay-Medium" size:14];
         [self.contentView addSubview:_nameLabel];
         
         _eventLabel = [UILabel new];
         _eventLabel.textColor = [UIColor grayColor];
-        _eventLabel.font = [UIFont sanFranciscoDisplayMedium13];
+        _eventLabel.font = [UIFont fontWithName:@"SanFranciscoDisplay-Medium" size:13];
         [self.contentView addSubview:_eventLabel];
     }
     return self;

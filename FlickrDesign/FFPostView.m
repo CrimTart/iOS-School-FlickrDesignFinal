@@ -7,7 +7,6 @@
 //
 
 #import "FFPostView.h"
-#import "UIFont+FFFonts.h"
 #import "Masonry.h"
 
 @implementation FFPostView
@@ -23,14 +22,14 @@
     [view addSubview:avatarView];
     
     UILabel *nameLabel = [UILabel new];
-    nameLabel.font = [UIFont sanFranciscoDisplayMedium14];
+    nameLabel.font = [UIFont fontWithName:@"SanFranciscoDisplay-Medium" size:14];
     [view addSubview:nameLabel];
     
     UIImageView *locationSign = [UIImageView new];
     locationSign.image = [UIImage imageNamed:@"location"];
     [view addSubview:locationSign];
     UILabel *locationLabel = [UILabel new];
-    locationLabel.font = [UIFont sanFranciscoDisplayMedium13];
+    locationLabel.font = [UIFont fontWithName:@"SanFranciscoDisplay-Medium" size:13];
     locationLabel.textColor = [UIColor colorWithRed:170/255.0 green:170/255.0 blue:170/255.0 alpha:1];
     [view addSubview:locationLabel];
     

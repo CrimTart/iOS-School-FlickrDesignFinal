@@ -8,7 +8,6 @@
 
 #import "FFFavoritesViewController.h"
 #import "FFFavoritesCell.h"
-#import "UIColor+FFColor.h"
 #import "FFItem.h"
 #import "FFFavoritesModel.h"
 
@@ -37,7 +36,7 @@ static NSString * const reuseID = @"favoritesCell";
     [super viewDidLoad];
     self.navigationItem.title = @"Избранное";
     self.tableView = [[UITableView alloc] initWithFrame:self.view.frame];
-    self.tableView.backgroundColor = [UIColor myGray];
+    self.tableView.backgroundColor = [UIColor colorWithRed:250/255.0 green:250/255.0 blue:250/255.0 alpha:0.9];
     [self.view addSubview:self.tableView];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;

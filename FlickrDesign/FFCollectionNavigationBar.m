@@ -7,7 +7,6 @@
 //
 
 #import "FFCollectionNavigationBar.h"
-#import "UIColor+FFColor.h"
 #import "Masonry.h"
 
 @implementation FFCollectionNavigationBar

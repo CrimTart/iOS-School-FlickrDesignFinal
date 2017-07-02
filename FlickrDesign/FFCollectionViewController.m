@@ -12,7 +12,6 @@
 #import "FFCollectionViewCell.h"
 #import "FFCollectionViewLayout.h"
 
-#import "UIColor+FFColor.h"
 #import "FFSettingsViewController.h"
 #import "FFPostController.h"
 #import "FFPostModel.h"
@@ -49,7 +48,7 @@
     self.dataProvider = [[FFCollectionViewDataProvider alloc] initWithCollectionView:self.collectionView model:self.model];
     self.collectionView.dataSource = self.dataProvider;
     
-    self.navigationController.navigationBar.backgroundColor = [UIColor myGray];
+    self.navigationController.navigationBar.backgroundColor = [UIColor colorWithRed:250/255.0 green:250/255.0 blue:250/255.0 alpha:0.9];
     self.navBar = [[FFCollectionNavigationBar alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), 44)];
     self.navigationItem.titleView = self.navBar;
     self.navBar.searchBar.delegate = self;
@@ -75,7 +74,7 @@
     self.layout = [[FFCollectionViewLayout alloc] initWithDelegate:self];
     CGRect frame = self.view.frame;
     self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(frame), CGRectGetHeight(frame)) collectionViewLayout:self.layout];
-    self.collectionView.backgroundColor = [UIColor myGray];
+    self.collectionView.backgroundColor = [UIColor colorWithRed:250/255.0 green:250/255.0 blue:250/255.0 alpha:0.9];
     [self.collectionView registerClass:[FFCollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([FFCollectionViewCell class])];
     [self.view addSubview:_collectionView];
     self.collectionView.delegate = self;

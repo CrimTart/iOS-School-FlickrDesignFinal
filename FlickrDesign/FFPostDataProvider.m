@@ -8,7 +8,6 @@
 
 #import "FFPostDataProvider.h"
 #import "FFPostViewCells.h"
-#import "UIColor+FFColor.h"
 #import "FFItem.h"
 
 @interface FFPostDataProvider ()

@@ -18,6 +18,6 @@
 
 +(instancetype) new NS_UNAVAILABLE;
 -(instancetype) init NS_UNAVAILABLE;
--(instancetype) initWithNetworkManager: (id<FFNetworkProtocol> *)networkManager AndStorageService: (id<FFStorageProtocol>)storageService;
+-(instancetype) initWithFacade: (FFFacade *)facade;
 
 @end
