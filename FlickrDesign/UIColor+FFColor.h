@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  UIColor+FFColor.h
 //  FlickrDesign
 //
 //  Created by Admin on 30.06.17.
@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
+@interface UIColor (FFColor)
 
++(UIColor *) myGray;
++(UIColor *) myOpaqueGray;
++(UIColor *) separatorColor;
 
 @end
-
