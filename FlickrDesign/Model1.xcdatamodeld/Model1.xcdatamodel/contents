@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="12141" systemVersion="16E195" minimumToolsVersion="Automatic" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+    <entity name="Comment" representedClassName="Comment" syncable="YES">
+        <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <relationship name="author" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Human" inverseName="comment" inverseEntity="Human" syncable="YES"/>
+        <relationship name="item" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="FFItem" inverseName="comments" inverseEntity="FFItem" syncable="YES"/>
+    </entity>
+    <entity name="FFItem" representedClassName="FFItem" syncable="YES">
+        <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isFavorite" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="largePhoto" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="largePhotoURL" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="location" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="numberOfComments" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="numberOfLikes" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="photoID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="photoSecret" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="searchRequest" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="thumbnail" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="thumbnailURL" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="author" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Human" inverseName="item" inverseEntity="Human" syncable="YES"/>
+        <relationship name="comments" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Comment" inverseName="item" inverseEntity="Comment" syncable="YES"/>
+    </entity>
+    <entity name="Human" representedClassName="Human" syncable="YES">
+        <attribute name="avatar" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <attribute name="avatarURL" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="comment" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Comment" inverseName="author" inverseEntity="Comment" syncable="YES"/>
+        <relationship name="item" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="FFItem" inverseName="author" inverseEntity="FFItem" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Comment" positionX="-63" positionY="-18" width="128" height="105"/>
+        <element name="Human" positionX="-54" positionY="-9" width="128" height="120"/>
+        <element name="FFItem" positionX="-36" positionY="9" width="128" height="270"/>
+    </elements>
+</model>

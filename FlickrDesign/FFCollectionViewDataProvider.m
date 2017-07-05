@@ -27,8 +27,6 @@
     return self;
 }
 
-#pragma mark - UICollectionViewDataSource
-
 -(UICollectionViewCell *) collectionView: (UICollectionView *)collectionView cellForItemAtIndexPath: (NSIndexPath *)indexPath {
     FFCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([FFCollectionViewCell class]) forIndexPath:indexPath];
     UIImage *image = [self.model imageForIndex:indexPath.item];
@@ -38,7 +36,8 @@
         if (!self.collectionView.dragging && !self.collectionView.decelerating) {
             [self loadImageForIndexPath:indexPath];
         }
-    } else {
+    }
+    else {
         cell.imageView.image = image;
     }
     return cell;

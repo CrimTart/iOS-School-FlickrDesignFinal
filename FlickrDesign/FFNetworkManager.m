@@ -25,7 +25,7 @@
     return self;
 }
 
--(void) getModelFromURL: (NSURL *)url withCompletionHandler: (void (^)(NSDictionary *json))completionHandler {
+-(void) getJSONFromURL: (NSURL *)url withCompletionHandler: (void (^)(NSDictionary *json))completionHandler {
     NSURLSessionDataTask *task = [self.session dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         if (data) {
             NSError *jsonError = nil;
@@ -49,7 +49,23 @@
     [task resume];
 }
 
--(NSURLSessionTask *) downloadImageFromURL: (NSURL *)url withCompletionHandler: (void (^)(NSString *dataURL))completionHandler {
+-(void) getDataFromURL: (NSURL *)url withCompletionHandler: (void (^)(NSData *data))completionHandler {
+    NSURLSessionDataTask *task = [self.session dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        if (data) {
+            completionHandler(data);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+            });
+        }
+    }];
+    task.priority = NSURLSessionTaskPriorityHigh;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    });
+    [task resume];
+}
+
+-(NSURLSessionDownloadTask *) downloadImageFromURL: (NSURL *)url withCompletionHandler: (void (^)(NSString *dataURL))completionHandler {
     NSURLSessionDownloadTask *task = [self.session downloadTaskWithURL:url completionHandler:^(NSURL * _Nullable location, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
         if (httpResponse.statusCode != 200) {

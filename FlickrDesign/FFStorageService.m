@@ -52,59 +52,105 @@
     return fetchedArray;
 }
 
--(void) save {
-    [self.stack.privateContext performBlockAndWait:^{
-        if (self.stack.privateContext.hasChanges) {
+-(void) savePrivateContext: (NSManagedObjectContext *)privateContext {
+    [privateContext performBlockAndWait:^{
+        if (privateContext.hasChanges) {
             NSError *error = nil;
-            [self.stack.privateContext save:&error];
-            if (error) {
-                NSLog(@"storageService -%@", error.localizedDescription);
-            }
-        }
-    }];
-    [self.stack.mainContext performBlock:^{
-        if (self.stack.mainContext.hasChanges) {
-            NSError *error = nil;
-            [self.stack.mainContext save:&error];
-            if (error) {
+            if (![privateContext save:&error]) {
                 NSLog(@"storageService - %@", error.localizedDescription);
             }
         }
     }];
+    NSLock *lock = [NSLock new];
+    [lock lock];
+    [self.stack.mainContext performBlockAndWait:^{
+        if (self.stack.mainContext.hasChanges) {
+            NSError *error = nil;
+            if(![self.stack.mainContext save:&error]) {
+                NSLog(@"storageService - %@", error.localizedDescription);
+            }
+        }
+    }];
+    [lock unlock];
+}
+
+-(void) save {
+    NSLock *lock = [NSLock new];
+    [lock lock];
+    [self.stack.mainContext performBlockAndWait:^{
+        if (self.stack.mainContext.hasChanges) {
+            NSError *error = nil;
+            if(![self.stack.mainContext save:&error]) {
+                NSLog(@"storageService - %@", error.localizedDescription);
+                NSLog(@"storageService - %@", error.userInfo);
+            }
+        }
+    }];
+    [lock unlock];
 }
 
 -(void) deleteEntities: (NSString *)entity withPredicate: (NSPredicate *)predicate {
-    NSError *error;
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:entity];
-    request.predicate = predicate;
-    NSArray *results = [self.stack.privateContext executeFetchRequest:request error:&error];
-    [self.stack.privateContext performBlockAndWait:^{
+    NSManagedObjectContext *privateContext = [self.stack setupPrivateContext];
+    [privateContext performBlockAndWait:^{
+        NSError *error;
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:entity];
+        request.predicate = predicate;
+        NSArray *results = [privateContext executeFetchRequest:request error:&error];
+        __weak typeof(self) weakSelf = self;
+        __strong typeof(weakSelf) strongSelf = weakSelf;
         for (id item in results) {
-            [self.stack.privateContext deleteObject:item];
+            [privateContext deleteObject:item];
         }
+        [strongSelf savePrivateContext:privateContext];
     }];
-    [self save];
 }
 
--(void) saveObject: (id)object forEntity: (NSString *)entity forAttribute: (NSString *)attribute forKey: (NSString *)key withCompletionHandler: (void (^)(void))completionHandler {
-    id fetchedEntity = [self fetchEntity:entity forKey:key];
-    if (!fetchedEntity) {
-        NSLog(@"storageService - saveObject couldn't fetch entity for key %@", key);
-    }
-    [self.stack.privateContext performBlock:^{
+-(void) saveObject: (id)object forEntity: (NSString *)entity forAttribute: (NSString *)attribute forKey: (NSString *)key withCompletionHandler: (voidBlock)completionHandler {
+    NSManagedObjectContext *privateContext = [self.stack setupPrivateContext];
+    [privateContext performBlockAndWait:^{
+        id fetchedEntity = [self fetchEntity:entity forKey:key];
+        if (!fetchedEntity) {
+            NSLog(@"storageService - saveObject couldn't fetch entity for key %@", key);
+        }
         [fetchedEntity setValue:object forKey:attribute];
-        [self save];
-        completionHandler();
+        [self savePrivateContext:privateContext];
+        if (completionHandler) completionHandler();
     }];
+
 }
 
 -(void) insertNewObjectForEntityForName: (NSString *)name withDictionary: (NSDictionary<NSString *, id> *)attributes {
-    [self.stack.privateContext performBlock:^{
-        id entity = [NSEntityDescription insertNewObjectForEntityForName:name inManagedObjectContext:self.stack.privateContext];
+    NSManagedObjectContext *privateContext = [self.stack setupPrivateContext];
+    [privateContext performBlockAndWait:^{
+        id entity = [NSEntityDescription insertNewObjectForEntityForName:name inManagedObjectContext:privateContext];
         for (NSString *attribute in attributes) {
             [entity setValue:attributes[attribute] forKey:attribute];
         }
-        [self save];
+        [self savePrivateContext:privateContext];
+    }];
+}
+
+-(id) insertNewObjectForEntity: (NSString *)name {
+    NSLock *lock = [NSLock new];
+    [lock lock];
+    NSManagedObject *entity = [NSEntityDescription insertNewObjectForEntityForName:name inManagedObjectContext:self.stack.mainContext];
+    [lock unlock];
+    return entity;
+}
+
+-(void) performBlockAsynchronously: (voidBlock)block withCompletion:(voidBlock)completion {
+    NSManagedObjectContext *privateContext = [self.stack setupPrivateContext];
+    [privateContext performBlockAndWait:^{
+        block();
+        [privateContext performBlockAndWait:^{
+            if (privateContext.hasChanges) {
+                NSError *error = nil;
+                if (![privateContext save:&error]) {
+                    NSLog(@"storageService - %@", error.localizedDescription);
+                }
+            }
+        }];
+        if (completion) completion();
     }];
 }
 

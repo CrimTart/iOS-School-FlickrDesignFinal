@@ -7,17 +7,15 @@
 //
 
 #import "FFItem.h"
-#import "FFStorageProtocol.h"
-
-static NSString *const entityName = @"FFItem";
 
 @implementation FFItem
 
-@dynamic isFavorite;
 @dynamic numberOfLikes;
 @dynamic numberOfComments;
-@dynamic latitude;
-@dynamic longitude;
+@dynamic location;
+@dynamic photoID;
+@dynamic photoSecret;
+@dynamic isFavorite;
 @dynamic largePhotoURL;
 @dynamic thumbnailURL;
 @dynamic text;
@@ -26,25 +24,50 @@ static NSString *const entityName = @"FFItem";
 @dynamic identifier;
 @dynamic searchRequest;
 
+@dynamic author;
+@dynamic comments;
+
+@synthesize commentsArray = _commentsArray;
+
 +(NSString *) identifierForItemWithDictionary: (NSDictionary *)dict storage: (id<FFStorageProtocol>)storage forRequest: (NSString *)request {
     NSString *base = [NSString stringWithFormat:@"https://farm%@.staticflickr.com/%@/%@_%@.jpg",
                       dict[@"farm"], dict[@"server"], dict[@"id"], dict[@"secret"]];
-    NSString *thumbnailUrl = [base stringByAppendingString:@""]; //_s//_n
-    NSString *imageUrl = [base stringByAppendingString:@""]; //z
+    NSString *thumbnailUrl = [base stringByAppendingString:@""];
+    NSString *imageUrl = [base stringByAppendingString:@""];
     NSString *identifier = thumbnailUrl;
     
-    FFItem *item = (FFItem *)[storage fetchEntity:entityName forKey:identifier];
+    FFItem *item = (FFItem *)[storage fetchEntity:NSStringFromClass([self class]) forKey:identifier];
     
     if (!item) {
-        [storage insertNewObjectForEntityForName:entityName withDictionary:@{
-                                                                             @"thumbnailURL":thumbnailUrl,
-                                                                             @"largePhotoURL":imageUrl,
-                                                                             @"text":dict[@"title"],
-                                                                             @"identifier":thumbnailUrl,
-                                                                             @"searchRequest":request
-                                                                             }];
+        NSString *escapedEmojiText = dict[@"title"] ? [NSString stringWithCString:[dict[@"title"] cStringUsingEncoding:NSNonLossyASCIIStringEncoding] encoding:NSUTF8StringEncoding] : @" ";
+        [storage insertNewObjectForEntityForName:NSStringFromClass([self class]) withDictionary:@{
+                                                                                                  @"thumbnailURL":thumbnailUrl,
+                                                                                                  @"largePhotoURL":imageUrl,
+                                                                                                  @"text":escapedEmojiText,
+                                                                                                  @"identifier":thumbnailUrl,
+                                                                                                  @"searchRequest":request,
+                                                                                                  @"photoID":dict[@"id"],
+                                                                                                  @"photoSecret":dict[@"secret"]
+                                                                                                  }];
     }
     return identifier;
+}
+
+-(void) addComments: (NSSet<Comment *> *)comments {
+    __weak typeof(self)weakSelf = self;
+    dispatch_barrier_sync(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{
+        __strong typeof(self)strongSelf = weakSelf;
+        strongSelf.comments = [strongSelf.comments setByAddingObjectsFromSet:comments];
+        strongSelf.commentsArray = strongSelf.comments.allObjects;
+    });
+}
+
+-(NSArray<Comment *> *) commentsArray {
+    if (!_commentsArray) {
+        return self.comments.allObjects;
+    } else {
+        return _commentsArray;
+    }
 }
 
 @end

@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "FFFacade.h"
+#import "FFStorageProtocol.h"
+#import "FFNetworkProtocol.h"
 
 @class UIImage;
 @class FFItem;
@@ -15,6 +16,9 @@
 typedef void (^voidBlock)(void);
 
 @protocol FFCollectionModelProtocol <NSObject>
+
+@property (nonatomic, strong, readonly) id<FFStorageProtocol> storageService;
+@property (nonatomic, strong, readonly) id<FFNetworkProtocol> networkManager;
 
 -(NSUInteger) numberOfItems;
 
@@ -27,8 +31,6 @@ typedef void (^voidBlock)(void);
 -(void) getItemsForRequest: (NSString *)request withCompletionHandler: (voidBlock)completionHandler;
 
 -(void) clearModel;
-
--(FFFacade *) getFacade;
 
 -(void) pauseDownloads;
 

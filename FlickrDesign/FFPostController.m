@@ -10,6 +10,8 @@
 #import "FFPostDataProvider.h"
 #import "FFPostViewCells.h"
 #import "FFItem.h"
+#import "Human.h"
+#import "Comment.h"
 #import "FFCollectionModel.h"
 #import "FFPostView.h"
 #import "Masonry.h"
@@ -23,6 +25,7 @@
 @property (nonatomic, weak) FFImageCell *imageCell;
 @property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, strong) FFPostDataProvider *provider;
+@property (nonatomic, strong) FFPostView *postView;
 
 @end
 
@@ -37,7 +40,7 @@
     return self;
 }
 
--(void) viewDidLoad {
+/*-(void) viewDidLoad {
     [super viewDidLoad];
     UIBarButtonItem *bbi = [[UIBarButtonItem alloc] initWithCustomView:[FFPostView configureNavigationBar]];
     [self.navigationItem setLeftBarButtonItem:bbi];
@@ -54,44 +57,98 @@
     self.tableView.allowsSelection = NO;
     self.tableView.delegate = self;
     self.tableView.dataSource = self.provider;
+}*/
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.tabBarController.tabBar.hidden = YES;
+    [self configureLeftBarButtonItem];
+    [self configureTableView];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addToFavorites:)];
 }
 
--(UIView *) tableView: (UITableView *)tableView viewForFooterInSection: (NSInteger)section {
-    if (section == 0) {
-        FFLikesFooter *footer = [FFLikesFooter new];
-        NSUInteger likes = 16; NSUInteger comments = 5;
-        footer.likesLabel.text = [NSString stringWithFormat:@"%lu лайков", likes];
-        footer.commentsLabel.text = [NSString stringWithFormat:@"%lu комментариев", comments];
-        return footer;
+-(void) viewWillAppear: (BOOL)animated {
+    [super viewWillAppear:animated];
+    FFItem *selectedItem = [self.model getSelectedItem];
+    if (!selectedItem.author) {
+        __weak typeof(self)weakSelf = self;
+        [self.model getMetadataForSelectedItemWithCompletionHandler:^{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf configureLeftBarButtonItem];
+                [weakSelf.tableView reloadData];
+            });
+        }];
+    } else {
+        [self.tableView reloadData];
     }
-    return [UITableViewHeaderFooterView new];
 }
 
--(void) tableView: (UITableView *)tableView willDisplayFooterView: (UIView *)view forSection: (NSInteger)section {
-    view.backgroundColor = [UIColor colorWithRed:250/255.0 green:250/255.0 blue:250/255.0 alpha:0.9];
+-(void) configureLeftBarButtonItem {
+    self.postView = [FFPostView new];
+    FFItem *selectedItem = [self.model getSelectedItem];
+    Human *author = selectedItem.author;
+    UIImage *avatar = author.avatar;
+    if (!avatar) {
+        __weak typeof(self)weakSelf = self;
+        [author getAvatarWithNetworkService:self.model.networkManager storageService:self.model.storageService completionHandler:^(UIImage *avatar) {
+            __strong typeof(weakSelf)strongSelf = weakSelf;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [strongSelf configureLeftBarButtonItem];
+                [self.tableView reloadData];
+            });
+        }];
+    }
+    else {
+        self.postView.avatarView.image = avatar;
+    }
+    self.postView.nameLabel.text = selectedItem.author.name ? [NSString stringWithCString:[selectedItem.author.name cStringUsingEncoding:NSUTF8StringEncoding] encoding:NSNonLossyASCIIStringEncoding] : @" ";
+    if (selectedItem.location) self.postView.locationLabel.text = [NSString stringWithCString:[selectedItem.location cStringUsingEncoding:NSUTF8StringEncoding] encoding:NSNonLossyASCIIStringEncoding];
+    UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc] initWithCustomView:self.postView];
+    [self.navigationItem setLeftBarButtonItem:barButtonItem];
+    self.navigationItem.leftItemsSupplementBackButton = YES;
 }
 
--(CGFloat) tableView: (UITableView *)tableView heightForRowAtIndexPath: (NSIndexPath *)indexPath {
+-(void) configureTableView {
+    CGRect frame = self.view.frame;
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(frame), CGRectGetHeight(frame))];
+    self.tableView.backgroundColor = [UIColor colorWithRed:250/255.0 green:250/255.0 blue:250/255.0 alpha:0.9];
+    self.tableView.separatorColor = [UIColor colorWithRed:151/255.0 green:151/255.0 blue:151/255.0 alpha:1];
+    [self.tableView registerClass:[FFImageCell class] forCellReuseIdentifier:NSStringFromClass([FFImageCell class])];
+    [self.tableView registerClass:[FFCommentsCell class] forCellReuseIdentifier:NSStringFromClass([FFCommentsCell class])];
+    [self.tableView registerClass:[FFLikesCell class] forCellReuseIdentifier:NSStringFromClass([FFLikesCell class])];
+    self.tableView.allowsSelection = NO;
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self.provider;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    [self.view addSubview:self.tableView];
+}
+
+-(CGFloat) tableView: (UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) {
-        return 312;
-    } else {
-        return 60;
+        if (indexPath.row == 0) {
+            return 313.0;
+        }
+        else return 57.5;
     }
+    else return 76.0;
 }
 
--(CGFloat) tableView: (UITableView *)tableView heightForFooterInSection: (NSInteger)section {
+-(UIView *) tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
     if (section == 0) {
-        return 60;
+        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 1)];
+        view.backgroundColor = [UIColor colorWithRed:151/255.0 green:151/255.0 blue:151/255.0 alpha:1];
+        view.layer.borderWidth = 0;
+        view.layer.borderColor = view.backgroundColor.CGColor;
+        return view;
     } else {
-        return 0;
+        return nil;
     }
 }
 
--(IBAction) addToFavorites: (id)sender {
-    [self.model makeFavorite:YES];
+-(CGFloat) tableView: (UITableView *)tableView  heightForFooterInSection: (NSInteger)section {
+    if (section == 0) return 0.5;
+    else return 0;
 }
-
-#pragma mark - FFCellsDelegate
 
 -(void) showImageForCell: (FFImageCell *)cell {
     self.imageCell = cell;
@@ -121,6 +178,10 @@
     self.zoomedImageView.layer.opacity = 0;
     self.zoomedImageView.hidden = YES;
     [self.imageCell addGestures];
+}
+
+-(IBAction) addToFavorites: (id)sender {
+    [self.model makeFavorite:YES];
 }
 
 @end

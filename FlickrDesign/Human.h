@@ -7,15 +7,24 @@
 //
 
 #import <CoreData/CoreData.h>
+#import "FFStorageService.h"
+#import "FFNetworkProtocol.h"
+
 @class UIImage;
+@class Comment;
+@class FFItem;
 
 @interface Human : NSManagedObject
 
-@property (nonatomic, strong) NSURL *avatarURL;
+@property (nonatomic, strong) NSString *avatarURL;
 @property (nonatomic, strong) NSString *name;
-@property (nonatomic, strong) NSURL *url;
 @property (nonatomic, strong) UIImage *avatar;
 
-+(Human *) humanWithDictionary: (NSDictionary *)dict inManagedObjectContext: (NSManagedObjectContext *)moc;
+@property (nonatomic, strong) NSSet<Comment *> *comment;
+@property (nonatomic, strong) NSSet<FFItem *> *item;
+
++(Human *) humanWithDictionary: (NSDictionary *)dict storage: (id<FFStorageProtocol>)storage;
+
+-(void) getAvatarWithNetworkService: (id<FFNetworkProtocol>)networkService storageService: (id<FFStorageProtocol>)storageService completionHandler: (void (^)(UIImage *))completionHandler;
 
 @end

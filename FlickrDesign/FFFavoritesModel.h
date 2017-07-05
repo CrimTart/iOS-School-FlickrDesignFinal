@@ -7,13 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "FFFacade.h"
+#import "FFStorageProtocol.h"
 
 @class FFItem;
 
 @interface FFFavoritesModel : NSObject
 
--(instancetype) initWithFacade: (FFFacade *)facade;
+-(instancetype) initWithStorageService: (id<FFStorageProtocol>)storageService;
 
 -(void) getFavoriteItemsWithCompletionHandler: (void (^)(void))completionHandler;
 

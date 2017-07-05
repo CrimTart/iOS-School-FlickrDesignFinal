@@ -6,23 +6,21 @@
 //  Copyright © 2017 ilya. All rights reserved.
 //
 
-//Facade --- DataStorage (destroyevrythng)
-
 #import "FFSettingsViewController.h"
 
 @interface FFSettingsViewController () <UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) FFFacade *model;
+@property (nonatomic, strong) id<FFStorageProtocol> storage;
 
 @end
 
 @implementation FFSettingsViewController
 
--(instancetype) initWithModel: (FFFacade *)model {
+-(instancetype) initWithStorage: (id<FFStorageProtocol>)storage {
     self = [super init];
     if (self) {
-        _model = model;
+        _storage = storage;
     }
     return self;
 }
@@ -83,8 +81,12 @@
 -(void) tableView: (UITableView *)tableView didSelectRowAtIndexPath: (NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.row == 1) {
-        [self.model destroyEverything];
+        [self clear];
     }
+}
+
+-(void) clear {
+    [self.storage deleteEntities:@"FFItem" withPredicate:nil];
 }
 
 -(UIView *) tableView: (UITableView *)tableView viewForFooterInSection: (NSInteger)section {

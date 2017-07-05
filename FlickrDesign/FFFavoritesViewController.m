@@ -51,8 +51,6 @@ static NSString * const reuseID = @"favoritesCell";
     }];
 }
 
-#pragma mark - Table View
-
 -(UITableViewCell *) tableView: (UITableView *)tableView cellForRowAtIndexPath: (NSIndexPath *)indexPath {
     FFFavoritesCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseID];
     FFItem *currentItem = [self.model itemForIndex:indexPath.item];

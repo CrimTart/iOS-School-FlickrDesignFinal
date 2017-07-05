@@ -28,8 +28,6 @@
 
 @implementation FFCollectionViewController
 
-#pragma mark - Lifecycle
-
 -(instancetype) initWithModel: (id<FFCollectionModelProtocol>)model {
     self = [super init];
     if (self) {
@@ -55,7 +53,7 @@
     [self.navBar.settingsButton addTarget:self action:@selector(gotoSettings:) forControlEvents:UIControlEventTouchUpInside];
 }
 
--(void)viewWillAppear: (BOOL)animated {
+-(void) viewWillAppear: (BOOL)animated {
     [super viewWillAppear:YES];
     self.tabBarController.tabBar.hidden = NO;
 }
@@ -95,8 +93,6 @@
     }
 }
 
-#pragma mark - Search
-
 -(void) searchBarSearchButtonClicked: (UISearchBar *)searchBar {
     [self.model clearModel];
     [self performSearch:searchBar];
@@ -117,10 +113,8 @@
     }
 }
 
-#pragma mark - CollectionView delegate
-
 -(void) collectionView: (UICollectionView *)collectionView didSelectItemAtIndexPath: (NSIndexPath *)indexPath {
-    FFPostModel *postModel = [[FFPostModel alloc] initWithFacade:[self.model getFacade]];
+    FFPostModel *postModel = [[FFPostModel alloc] initWithNetworkManager:self.model.networkManager storageService:self.model.storageService];
     FFItem *selectedItem = [self.model itemForIndex:indexPath.row];
     [postModel passSelectedItem:selectedItem];
     FFPostController *postViewController = [[FFPostController alloc] initWithModel:postModel];
@@ -138,18 +132,9 @@
     }
 }
 
-#pragma mark - CollectionLayoutDelegate
-
 -(NSUInteger) numberOfItems {
-    if (![self.model numberOfItems]) {
-        return 0;
-    }
-    else {
-        return [self.model numberOfItems];
-    }
+    return [self.model numberOfItems];
 }
-
-#pragma mark - UIScrollViewDelegate
 
 -(void) scrollViewDidEndDecelerating: (UIScrollView *)scrollView {
     [self loadImageForVisibleCells];
@@ -172,12 +157,10 @@
     [self.model pauseDownloads];
 }
 
-#pragma mark - other
-
 -(IBAction) gotoSettings: (id)sender {
     UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithTitle:@" " style:UIBarButtonItemStylePlain target:nil action:nil];
     [self.navigationItem setBackBarButtonItem:newBackButton];
-    FFSettingsViewController *settingsViewController = [[FFSettingsViewController alloc] initWithModel:[self.model getFacade]];
+    FFSettingsViewController *settingsViewController = [[FFSettingsViewController alloc] initWithStorage:self.model.storageService];
     [self.navigationController pushViewController:settingsViewController animated:YES];
 }
 

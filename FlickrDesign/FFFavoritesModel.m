@@ -6,8 +6,6 @@
 //  Copyright © 2017 ilya. All rights reserved.
 //
 
-//Facade --- DataStorage (no methods)
-
 #import "FFFavoritesModel.h"
 #import "FFItem.h"
 @import UIKit;
@@ -18,17 +16,15 @@ static NSString *const kItemEntity = @"FFItem";
 
 @property (nonatomic, strong) NSDictionary <NSNumber *, FFItem *> *items;
 @property (nonatomic, strong, readonly) id<FFStorageProtocol> storageService;
-@property (nonatomic, strong, readonly) FFFacade *facade;
 
 @end
 
 @implementation FFFavoritesModel
 
--(instancetype) initWithFacade: (FFFacade *)facade {
+-(instancetype) initWithStorageService: (id<FFStorageProtocol>)storageService {
     self = [super init];
     if (self) {
-        _facade = facade;
-        _storageService = facade.storageService;
+        _storageService = storageService;
         _items = [NSDictionary new];
     }
     return self;
@@ -39,7 +35,7 @@ static NSString *const kItemEntity = @"FFItem";
 }
 
 -(void) getFavoriteItemsWithCompletionHandler: (void (^)(void))completionHandler {
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"isFavorite ==YES"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"isFavorite == YES"];
     NSArray *result = [self.storageService fetchEntities:kItemEntity withPredicate:predicate];
     NSUInteger index = 0;
     NSMutableDictionary *newItems = [NSMutableDictionary new];

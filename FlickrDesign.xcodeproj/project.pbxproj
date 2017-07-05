@@ -24,7 +24,6 @@
 		843EB11C1F06627100F5298B /* View+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 843EB10F1F06627100F5298B /* View+MASAdditions.m */; };
 		843EB11D1F06627100F5298B /* ViewController+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 843EB1121F06627100F5298B /* ViewController+MASAdditions.m */; };
 		843EB1761F06668F00F5298B /* FFNetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 843EB1751F06668F00F5298B /* FFNetworkManager.m */; };
-		843EB17D1F066A4200F5298B /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 843EB17B1F066A4200F5298B /* Model.xcdatamodeld */; };
 		843EB1811F066D8400F5298B /* Comment.m in Sources */ = {isa = PBXBuildFile; fileRef = 843EB1801F066D8400F5298B /* Comment.m */; };
 		843EB1841F066E4800F5298B /* Human.m in Sources */ = {isa = PBXBuildFile; fileRef = 843EB1831F066E4800F5298B /* Human.m */; };
 		843EB1871F066EBB00F5298B /* FFItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 843EB1861F066EBB00F5298B /* FFItem.m */; };
@@ -39,7 +38,6 @@
 		84B43F101F06805C004E6E3B /* FFPostView.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B43F0F1F06805C004E6E3B /* FFPostView.m */; };
 		84B43F131F06839A004E6E3B /* FFPostController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B43F121F06839A004E6E3B /* FFPostController.m */; };
 		84B43F161F0685C4004E6E3B /* FFImageDownloadOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B43F151F0685C4004E6E3B /* FFImageDownloadOperation.m */; };
-		84B43F1A1F0686A7004E6E3B /* FFFacade.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B43F191F0686A7004E6E3B /* FFFacade.m */; };
 		84B43F1D1F068A70004E6E3B /* FFSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B43F1C1F068A70004E6E3B /* FFSettingsViewController.m */; };
 		84B43F261F068D06004E6E3B /* FFCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B43F251F068D06004E6E3B /* FFCollectionViewController.m */; };
 		84B43F2A1F068E18004E6E3B /* FFCollectionModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B43F291F068E18004E6E3B /* FFCollectionModel.m */; };
@@ -47,6 +45,9 @@
 		84B43F301F06902B004E6E3B /* FFCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B43F2F1F06902B004E6E3B /* FFCollectionViewCell.m */; };
 		84B43F331F069050004E6E3B /* FFCollectionViewLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B43F321F069050004E6E3B /* FFCollectionViewLayout.m */; };
 		84B43F361F069CAA004E6E3B /* FFCollectionViewDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B43F351F069CAA004E6E3B /* FFCollectionViewDataProvider.m */; };
+		84CC1D161F0D0BD400E481B4 /* FFImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC1D151F0D0BD400E481B4 /* FFImageDownloader.m */; };
+		84CC1D191F0D290E00E481B4 /* FFMetadataLoadOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CC1D181F0D290E00E481B4 /* FFMetadataLoadOperation.m */; };
+		84CC1D1C1F0D3F3300E481B4 /* Model1.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 84CC1D1A1F0D3F3300E481B4 /* Model1.xcdatamodeld */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -87,7 +88,6 @@
 		843EB1731F06665200F5298B /* FFNetworkProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFNetworkProtocol.h; sourceTree = "<group>"; };
 		843EB1741F06668F00F5298B /* FFNetworkManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFNetworkManager.h; sourceTree = "<group>"; };
 		843EB1751F06668F00F5298B /* FFNetworkManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFNetworkManager.m; sourceTree = "<group>"; };
-		843EB17C1F066A4200F5298B /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		843EB17F1F066D8400F5298B /* Comment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Comment.h; sourceTree = "<group>"; };
 		843EB1801F066D8400F5298B /* Comment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Comment.m; sourceTree = "<group>"; };
 		843EB1821F066E4800F5298B /* Human.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Human.h; sourceTree = "<group>"; };
@@ -118,8 +118,6 @@
 		84B43F121F06839A004E6E3B /* FFPostController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFPostController.m; sourceTree = "<group>"; };
 		84B43F141F0685C4004E6E3B /* FFImageDownloadOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FFImageDownloadOperation.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		84B43F151F0685C4004E6E3B /* FFImageDownloadOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FFImageDownloadOperation.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		84B43F181F0686A7004E6E3B /* FFFacade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFFacade.h; sourceTree = "<group>"; };
-		84B43F191F0686A7004E6E3B /* FFFacade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFFacade.m; sourceTree = "<group>"; };
 		84B43F1B1F068A70004E6E3B /* FFSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FFSettingsViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		84B43F1C1F068A70004E6E3B /* FFSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FFSettingsViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		84B43F241F068D06004E6E3B /* FFCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFCollectionViewController.h; sourceTree = "<group>"; };
@@ -135,6 +133,11 @@
 		84B43F321F069050004E6E3B /* FFCollectionViewLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFCollectionViewLayout.m; sourceTree = "<group>"; };
 		84B43F341F069CAA004E6E3B /* FFCollectionViewDataProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFCollectionViewDataProvider.h; sourceTree = "<group>"; };
 		84B43F351F069CAA004E6E3B /* FFCollectionViewDataProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFCollectionViewDataProvider.m; sourceTree = "<group>"; };
+		84CC1D141F0D0BD400E481B4 /* FFImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFImageDownloader.h; sourceTree = "<group>"; };
+		84CC1D151F0D0BD400E481B4 /* FFImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFImageDownloader.m; sourceTree = "<group>"; };
+		84CC1D171F0D290E00E481B4 /* FFMetadataLoadOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FFMetadataLoadOperation.h; sourceTree = "<group>"; };
+		84CC1D181F0D290E00E481B4 /* FFMetadataLoadOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FFMetadataLoadOperation.m; sourceTree = "<group>"; };
+		84CC1D1B1F0D3F3300E481B4 /* Model1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model1.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -225,6 +228,7 @@
 		843EB16C1F06647500F5298B /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				84CC1D131F0D08A600E481B4 /* ImageDownload */,
 				843EB17A1F066A2800F5298B /* DataStorage */,
 				843EB1731F06665200F5298B /* FFNetworkProtocol.h */,
 				843EB1741F06668F00F5298B /* FFNetworkManager.h */,
@@ -237,7 +241,6 @@
 			isa = PBXGroup;
 			children = (
 				843EB17E1F066D6C00F5298B /* Entities */,
-				843EB17B1F066A4200F5298B /* Model.xcdatamodeld */,
 				843EB1881F06704000F5298B /* FFStorageProtocol.h */,
 				843EB1891F0670D700F5298B /* FFCoreDataStack.h */,
 				843EB18A1F0670D700F5298B /* FFCoreDataStack.m */,
@@ -250,6 +253,7 @@
 		843EB17E1F066D6C00F5298B /* Entities */ = {
 			isa = PBXGroup;
 			children = (
+				84CC1D1A1F0D3F3300E481B4 /* Model1.xcdatamodeld */,
 				843EB17F1F066D8400F5298B /* Comment.h */,
 				843EB1801F066D8400F5298B /* Comment.m */,
 				843EB1821F066E4800F5298B /* Human.h */,
@@ -274,14 +278,21 @@
 		843EB19B1F06758500F5298B /* Others */ = {
 			isa = PBXGroup;
 			children = (
-				84B43F141F0685C4004E6E3B /* FFImageDownloadOperation.h */,
-				84B43F151F0685C4004E6E3B /* FFImageDownloadOperation.m */,
-				84B43F181F0686A7004E6E3B /* FFFacade.h */,
-				84B43F191F0686A7004E6E3B /* FFFacade.m */,
 				84B43F1B1F068A70004E6E3B /* FFSettingsViewController.h */,
 				84B43F1C1F068A70004E6E3B /* FFSettingsViewController.m */,
 			);
 			name = Others;
+			sourceTree = "<group>";
+		};
+		84CC1D131F0D08A600E481B4 /* ImageDownload */ = {
+			isa = PBXGroup;
+			children = (
+				84B43F141F0685C4004E6E3B /* FFImageDownloadOperation.h */,
+				84B43F151F0685C4004E6E3B /* FFImageDownloadOperation.m */,
+				84CC1D141F0D0BD400E481B4 /* FFImageDownloader.h */,
+				84CC1D151F0D0BD400E481B4 /* FFImageDownloader.m */,
+			);
+			name = ImageDownload;
 			sourceTree = "<group>";
 		};
 		84EEC3391F0915F2001FA0BD /* Controllers */ = {
@@ -331,6 +342,8 @@
 				84B43F061F067B98004E6E3B /* FFPostModelProtocol.h */,
 				84B43F071F067C28004E6E3B /* FFPostModel.h */,
 				84B43F081F067C28004E6E3B /* FFPostModel.m */,
+				84CC1D171F0D290E00E481B4 /* FFMetadataLoadOperation.h */,
+				84CC1D181F0D290E00E481B4 /* FFMetadataLoadOperation.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -414,6 +427,7 @@
 				843EB1141F06627100F5298B /* MASCompositeConstraint.m in Sources */,
 				843EB1161F06627100F5298B /* MASConstraintMaker.m in Sources */,
 				843EB0E61F0661E000F5298B /* AppDelegate.m in Sources */,
+				84CC1D1C1F0D3F3300E481B4 /* Model1.xcdatamodeld in Sources */,
 				843EB11D1F06627100F5298B /* ViewController+MASAdditions.m in Sources */,
 				843EB1171F06627100F5298B /* MASLayoutConstraint.m in Sources */,
 				84B43F161F0685C4004E6E3B /* FFImageDownloadOperation.m in Sources */,
@@ -424,7 +438,7 @@
 				84B43F261F068D06004E6E3B /* FFCollectionViewController.m in Sources */,
 				84B43F0D1F067E85004E6E3B /* FFPostViewCells.m in Sources */,
 				84B43F1D1F068A70004E6E3B /* FFSettingsViewController.m in Sources */,
-				84B43F1A1F0686A7004E6E3B /* FFFacade.m in Sources */,
+				84CC1D161F0D0BD400E481B4 /* FFImageDownloader.m in Sources */,
 				84B43F091F067C28004E6E3B /* FFPostModel.m in Sources */,
 				843EB1761F06668F00F5298B /* FFNetworkManager.m in Sources */,
 				843EB1181F06627100F5298B /* MASViewAttribute.m in Sources */,
@@ -436,9 +450,9 @@
 				843EB1841F066E4800F5298B /* Human.m in Sources */,
 				84B43F361F069CAA004E6E3B /* FFCollectionViewDataProvider.m in Sources */,
 				84B43F041F067B41004E6E3B /* FFPostDataProvider.m in Sources */,
-				843EB17D1F066A4200F5298B /* Model.xcdatamodeld in Sources */,
 				84B43F001F067A0F004E6E3B /* FFFavoritesCell.m in Sources */,
 				843EB11A1F06627100F5298B /* NSArray+MASAdditions.m in Sources */,
+				84CC1D191F0D290E00E481B4 /* FFMetadataLoadOperation.m in Sources */,
 				843EB1A11F06780100F5298B /* FFFavoritesViewController.m in Sources */,
 				843EB11B1F06627100F5298B /* NSLayoutConstraint+MASDebugAdditions.m in Sources */,
 				84B43F331F069050004E6E3B /* FFCollectionViewLayout.m in Sources */,
@@ -606,13 +620,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		843EB17B1F066A4200F5298B /* Model.xcdatamodeld */ = {
+		84CC1D1A1F0D3F3300E481B4 /* Model1.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				843EB17C1F066A4200F5298B /* Model.xcdatamodel */,
+				84CC1D1B1F0D3F3300E481B4 /* Model1.xcdatamodel */,
 			);
-			currentVersion = 843EB17C1F066A4200F5298B /* Model.xcdatamodel */;
-			path = Model.xcdatamodeld;
+			currentVersion = 84CC1D1B1F0D3F3300E481B4 /* Model1.xcdatamodel */;
+			path = Model1.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

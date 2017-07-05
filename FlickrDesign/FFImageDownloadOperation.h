@@ -7,31 +7,19 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "FFFacade.h"
-@import UIKit;
+#import "FFNetworkProtocol.h"
+#import "FFStorageProtocol.h"
 
 @class FFItem;
 @class FFNetworkManager;
 
-typedef NS_ENUM(NSInteger, FFImageStatus) {
-    FFImageStatusDownloading,
-    FFImageStatusDownloaded,
-    FFImageStatusFiltered,
-    FFImageStatusCropped,
-    FFImageStatusCancelled,
-    FFImageStatusNone
-};
-
 @interface FFImageDownloadOperation : NSOperation
-
-@property (nonatomic, assign) FFImageStatus status;
 
 +(instancetype) new NS_UNAVAILABLE;
 -(instancetype) init NS_UNAVAILABLE;
 
--(instancetype) initWithFacade: (FFFacade *)facade entity: (NSString *)entityName key: (NSString *)key url: (NSString *)url attribute: (NSString *)attribute;
+-(instancetype) initWithNetworkManager:(id<FFNetworkProtocol>)networkManager storageService:(id<FFStorageProtocol>)storageService entity:(NSString *)entityName key:(NSString *)key url:(NSString *)url attribute:(NSString *)attribute completion:(void (^)(void))completion;
 
 -(void) pause;
--(void) resume;
 
 @end

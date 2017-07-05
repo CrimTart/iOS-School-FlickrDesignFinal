@@ -7,10 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "FFFacade.h"
+#import "FFStorageProtocol.h"
 
 @interface FFSettingsViewController : UIViewController
 
--(instancetype) initWithModel: (FFFacade *)model;
+-(instancetype) initWithStorage: (id<FFStorageProtocol>)storage;
 
 @end

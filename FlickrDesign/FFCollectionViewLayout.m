@@ -44,14 +44,10 @@
 }
 
 -(void) countDimensions {
-    self.numberOfItems = [self.delegate numberOfItems];
     self.numberOfColumns = 3;
-    NSUInteger extraCells = self.numberOfItems % 3;
-    self.numberOfItems += extraCells;
-    if (self.numberOfItems < 3 && self.numberOfItems > 0) {
-        self.numberOfItems = 3;
-    }
-    self.numberOfRows = (self.numberOfItems + 1) / 2;
+    self.numberOfItems = [self.delegate numberOfItems];
+    NSUInteger numberOfItemsWithExtraCells = (self.numberOfItems + 3) - (self.numberOfItems + 3) % 3;
+    self.numberOfRows = (numberOfItemsWithExtraCells + 1) / 2;
     self.defaultCellWidth = CGRectGetWidth(self.collectionView.frame) / 3;
 }
 
@@ -88,7 +84,8 @@
     if ((item % 12 == 0) || (item % 12 == 7)) {
         NSUInteger size = 2;
         frame = [self calculateFrame:size];
-    } else {
+    }
+    else {
         NSUInteger size = 1;
         frame = [self calculateFrame:size];
     }

@@ -7,12 +7,19 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "FFFacade.h"
+#import "FFStorageProtocol.h"
+#import "FFNetworkProtocol.h"
 
 @class UIImage;
 @class FFItem;
+@class Human;
+
+typedef void (^voidBlock)(void);
 
 @protocol FFPostModelProtocol <NSObject>
+
+@property (nonatomic, strong, readonly) id<FFStorageProtocol> storageService;
+@property (nonatomic, strong, readonly) id<FFNetworkProtocol> networkManager;
 
 -(void) makeFavorite: (BOOL)favorite;
 
@@ -20,6 +27,8 @@
 
 -(FFItem *) getSelectedItem;
 
--(void) loadImageForItem: (FFItem *)item withCompletionHandler: (void (^)(void))completionHandler;
+-(void) loadImageForItem: (FFItem *)item withCompletionHandler: (voidBlock)completionHandler;
+
+-(void) getMetadataForSelectedItemWithCompletionHandler: (voidBlock)completionHandler;
 
 @end

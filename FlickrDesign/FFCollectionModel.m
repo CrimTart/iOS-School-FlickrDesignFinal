@@ -6,49 +6,45 @@
 //  Copyright © 2017 ilya. All rights reserved.
 //
 
-//Facade --- Both (loadimg, clearop, pauseop)
-
 #import "FFCollectionModel.h"
 #import "FFItem.h"
-#import "FFStorageProtocol.h"
+#import "FFImageDownloader.h"
+#import "FFStorageService.h"
 #import "FFNetworkManager.h"
-#import "FFFacade.h"
+
 @import UIKit;
 
 static NSString *const kItemEntity = @"FFItem";
 
 @interface FFCollectionModel()
 
-@property (nonatomic, strong, readonly) id<FFStorageProtocol> storageService;
-@property (nonatomic, strong, readonly) id<FFNetworkProtocol> networkManager;
-@property (nonatomic, strong) FFFacade *facade;
 @property (nonatomic, assign) NSUInteger page;
 @property (nonatomic, copy) NSDictionary<NSNumber *, NSString *> *items;
 @property (nonatomic, copy) NSDictionary<NSNumber *, NSString *> *itemURLs;
 @property (nonatomic, copy) NSString *request;
+@property (nonatomic, strong) FFImageDownloader *imageDownloader;
 
 @end
 
 @implementation FFCollectionModel
 
--(instancetype) initWithFacade: (FFFacade *)facade {
+-(instancetype) initWithNetworkManager:(id<FFNetworkProtocol>)networkManager storageService:(id<FFStorageProtocol>)storageService {
     self = [super init];
     if (self) {
         _page = 1;
         _items = [NSDictionary new];
         _itemURLs = [NSDictionary new];
-        _facade = facade;
-        _storageService = facade.storageService;
-        _networkManager = facade.networkManager;
+        _storageService = storageService;
+        _networkManager = networkManager;
+        _imageDownloader = [[FFImageDownloader alloc] initWithNetworkManager:_networkManager storageService:_storageService];
     }
     return self;
-}
 
-#pragma mark - first start
+}
 
 -(void) firstStart: (NSString *)searchRequest withCompletionHandler: (voidBlock)completionHandler {
     self.request = searchRequest;
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"searchRequest ==%@", searchRequest];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"searchRequest == %@", searchRequest];
     NSArray<FFItem *> *fetchedItems = [self.storageService fetchEntities:kItemEntity withPredicate:predicate];
     NSUInteger index = 0;
     NSMutableDictionary<NSNumber *, NSString *> *newItems = [NSMutableDictionary new];
@@ -62,16 +58,15 @@ static NSString *const kItemEntity = @"FFItem";
     completionHandler();
 }
 
-#pragma mark - downloading items for search request
-
 -(void) getItemsForRequest: (NSString *)request withCompletionHandler: (voidBlock)completionHandler {
     if (!request) {
         request = self.request;
-    } else {
+    }
+    else {
         self.request = request;
     }
     NSURL *url = [self constructURLForRequest:request];
-    [self.networkManager getModelFromURL:url withCompletionHandler:^(NSDictionary *json) {
+    [self.networkManager getJSONFromURL:url withCompletionHandler:^(NSDictionary *json) {
         NSDictionary<NSNumber *, NSString *> *newItems = [self parseData:json];
         NSMutableDictionary<NSNumber *, NSString *> *oldItems = [self.items mutableCopy];
         [oldItems addEntriesFromDictionary:newItems];
@@ -86,13 +81,14 @@ static NSString *const kItemEntity = @"FFItem";
     if (json) {
         NSMutableDictionary<NSNumber *, NSString *> *parsingResults = [NSMutableDictionary new];
         NSUInteger index = self.items.count;
-        for (NSDictionary * dict in json[@"photos"][@"photo"]) {
+        for (NSDictionary *dict in json[@"photos"][@"photo"]) {
             NSString *itemIdentifier = [FFItem identifierForItemWithDictionary:dict storage:self.storageService forRequest:self.request];
             [parsingResults setObject:itemIdentifier forKey:@(index)];
             ++index;
         }
         return [parsingResults copy];
-    } else {
+    }
+    else {
         return nil;
     }
 }
@@ -100,12 +96,12 @@ static NSString *const kItemEntity = @"FFItem";
 -(NSURL *) constructURLForRequest: (NSString *)request {
     NSString *normalizedRequest = [request stringByReplacingOccurrencesOfString:@" " withString:@"+"];
     NSString *escapedString = [normalizedRequest stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
-    NSString *apiKey = @"&api_key=6a719063cc95dcbcbfb5ee19f627e05e";
-    NSString *urls = [NSString stringWithFormat:@"https://api.flickr.com/services/rest/?method=flickr.photos.search&format=json&nojsoncallback=1&per_page=30&tags=%@%@&page=%lu", escapedString, apiKey, self.page];
+    const char apiKeyChar[] = "&api_key=6a719063cc95dcbcbfb5ee19f627e05e";
+    NSString *apiKey = [NSString stringWithCString:apiKeyChar encoding:1];
+    NSString *sortBy = @"interestingness-desc";
+    NSString *urls = [NSString stringWithFormat:@"https://api.flickr.com/services/rest/?method=flickr.photos.search&format=json&nojsoncallback=1&per_page=30&tags=%@%@&sort=%@&page=%lu", escapedString, apiKey, sortBy, self.page];
     return [NSURL URLWithString:urls];
 }
-
-#pragma mark - returning data to viewController
 
 -(UIImage *) imageForIndex: (NSUInteger)index {
     NSString *key = self.items[@(index)];
@@ -118,11 +114,11 @@ static NSString *const kItemEntity = @"FFItem";
 -(void) loadImageForIndex: (NSUInteger)index withCompletionHandler: (voidBlock)completionHandler {
     NSString *identifier = self.items[@(index)];
     NSString *url = self.itemURLs[@(index)];
-    [self.facade loadImageForEntity:kItemEntity withIdentifier:identifier forURL:url forAttribute:@"thumbnail" withCompletionHandler:completionHandler];
+    [self.imageDownloader loadImageForEntity:kItemEntity withIdentifier:identifier forURL:url forAttribute:@"thumbnail" withCompletionHandler:completionHandler];
 }
 
 -(NSUInteger) numberOfItems {
-    if (!self.items.count) return 0;
+    if (!self.items) return 0;
     return self.items.count;
 }
 
@@ -132,22 +128,16 @@ static NSString *const kItemEntity = @"FFItem";
     return result;
 }
 
-#pragma mark - utilities
-
 -(void) clearModel {
     self.items = [NSDictionary new];
     self.page = 1;
-    [self.facade clearOperations];
-    NSPredicate *predicate  = [NSPredicate predicateWithFormat:@"isFavorite ==NO"];
+    [self.imageDownloader cancelOperations];
+    NSPredicate *predicate  = [NSPredicate predicateWithFormat:@"isFavorite == NO"];
     [self.storageService deleteEntities:kItemEntity withPredicate:predicate];
 }
 
--(FFFacade *) getFacade {
-    return self.facade;
-}
-
 -(void) pauseDownloads {
-    [self.facade pauseOperations];
+    [self.imageDownloader cancelOperations];
 }
 
 @end

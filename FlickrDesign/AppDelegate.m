@@ -11,7 +11,6 @@
 #import "FFCollectionModel.h"
 #import "FFFavoritesViewController.h"
 #import "FFFavoritesModel.h"
-#import "FFFacade.h"
 #import "FFStorageService.h"
 #import "FFNetworkManager.h"
 
@@ -23,10 +22,11 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    FFFacade *facade = [[FFFacade alloc] initWithNetworkManager:[FFNetworkManager new] storageService:[FFStorageService new]];
-    FFCollectionModel *collectionModel = [[FFCollectionModel alloc] initWithFacade:facade];
+    FFNetworkManager *networkManager = [FFNetworkManager new];
+    FFStorageService *storageService = [FFStorageService new];
+    FFCollectionModel *collectionModel = [[FFCollectionModel alloc] initWithNetworkManager:networkManager storageService:storageService];
     FFCollectionViewController *collectionViewController = [[FFCollectionViewController alloc] initWithModel:collectionModel];
-    FFFavoritesModel *favoritesModel = [[FFFavoritesModel alloc] initWithFacade:facade];
+    FFFavoritesModel *favoritesModel = [[FFFavoritesModel alloc] initWithStorageService:storageService];
     FFFavoritesViewController *favoritesViewController = [[FFFavoritesViewController alloc] initWithModel:favoritesModel];
     
     UINavigationController *ncCollection = [[UINavigationController alloc] initWithRootViewController:collectionViewController];

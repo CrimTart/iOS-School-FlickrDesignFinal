@@ -11,18 +11,41 @@
 
 @implementation Comment
 
-@dynamic comment;
-@dynamic url;
+@dynamic commentType;
+@dynamic text;
 @dynamic author;
+@dynamic item;
 
-+(Comment *) commentWithDictionary: (NSDictionary *)dict inManagedObjectContext: (NSManagedObjectContext *)moc {
++(Comment *) commentWithDictionary: (NSDictionary *)dict type: (FFCommentType)type storage: (id<FFStorageProtocol>)storage {
     Comment *comment = nil;
-    comment = [NSEntityDescription insertNewObjectForEntityForName:@"Comment" inManagedObjectContext:moc];
-    comment.author = dict[@"author"];
-    comment.url = dict[@"url"];
-    comment.comment = dict[@"comment"];
-    
+    comment = [storage insertNewObjectForEntity:NSStringFromClass([self class])];
+    switch (type) {
+        case FFCommentTypeComment: {
+            comment.text = dict[@"_content"] ? [NSString stringWithCString:[dict[@"_content"] cStringUsingEncoding:NSNonLossyASCIIStringEncoding] encoding:NSUTF8StringEncoding] : @" ";
+            comment.commentType = @0;
+            break;
+        }
+        case FFCommentTypeLike: {
+            comment.text = [NSString stringWithCString:[@"оценил ваше фото." cStringUsingEncoding:NSNonLossyASCIIStringEncoding] encoding:NSUTF8StringEncoding];
+            comment.commentType = @1;
+        }
+    }
+    Human *author = [Human humanWithDictionary:dict storage:storage];
+    comment.author = author;
     return comment;
+}
+
+-(FFCommentType) getCommentType {
+    switch ([self.commentType integerValue]) {
+        case 0: {
+            return FFCommentTypeComment;
+            break;
+        } case 1: {
+            return FFCommentTypeLike;
+            break;
+        }
+    }
+    return FFCommentTypeComment;
 }
 
 @end

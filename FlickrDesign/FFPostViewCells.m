@@ -9,9 +9,6 @@
 #import "FFPostViewCells.h"
 #import "Masonry.h"
 
-
-#pragma mark - FFImageCell
-
 @implementation FFImageCell
 
 +(BOOL) requiresConstraintBasedLayout {
@@ -29,6 +26,8 @@
         [self.contentView addSubview:_photoView];
         
         _descriptionText = [UILabel new];
+        _descriptionText.font = [UIFont systemFontOfSize:14];
+        _descriptionText.numberOfLines = 0;
         [self.contentView addSubview:_descriptionText];
         
         _spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
@@ -90,56 +89,56 @@
 
 @end
 
-
-#pragma mark - FFLikesFooter
-
-@implementation FFLikesFooter
+@implementation FFLikesCell
 
 +(BOOL) requiresConstraintBasedLayout {
     return YES;
 }
 
--(instancetype) initWithFrame: (CGRect)frame {
-    self.opaque = YES;
-    self = [super initWithFrame:frame];
+-(instancetype) initWithStyle: (UITableViewCellStyle)style reuseIdentifier: (NSString *)reuseIdentifier {
+    self = [super initWithStyle:style reuseIdentifier: reuseIdentifier];
     if (self) {
+        self.backgroundColor = [UIColor colorWithRed:250/255.0 green:250/255.0 blue:250/255.0 alpha:0.9];
         _likesImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"heart"]];
-        [self addSubview:_likesImageView];
+        [self.contentView addSubview:_likesImageView];
         _likesLabel = [UILabel new];
-        [self addSubview:_likesLabel];
+        _likesLabel.font = [UIFont systemFontOfSize:14];
+        [self.contentView addSubview:_likesLabel];
         
         _commentsImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"comment"]];
-        [self addSubview:_commentsImageView];
+        [self.contentView addSubview:_commentsImageView];
         _commentsLabel = [UILabel new];
-        [self addSubview:_commentsLabel];
+        [_commentsLabel setFont:[UIFont systemFontOfSize:14]];
+        [self.contentView addSubview:_commentsLabel];
     }
     return self;
 }
 
 -(void) updateConstraints {
-    [_likesImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.mas_left).with.offset(16);
-        make.centerY.equalTo(self.mas_centerY);
+    UIView *contentView = self.contentView;
+    [self.contentView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.equalTo(@55.5);
     }];
-    [_likesLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    [_likesImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(contentView.mas_left).with.offset(16);
+        make.centerY.equalTo(contentView.mas_centerY);
+    }];
+    [_likesLabel mas_updateConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(_likesImageView.mas_right).with.offset(7.1);
-        make.centerY.equalTo(self.mas_centerY);
+        make.centerY.equalTo(contentView.mas_centerY);
     }];
-    [_commentsImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.mas_left).with.offset(122.3);
-        make.centerY.equalTo(self.mas_centerY);
+    [_commentsImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(contentView.mas_left).with.offset(122.3);
+        make.centerY.equalTo(contentView.mas_centerY);
     }];
-    [_commentsLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    [_commentsLabel mas_updateConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(_commentsImageView.mas_right).with.offset(6);
-        make.centerY.equalTo(self.mas_centerY);
+        make.centerY.equalTo(contentView.mas_centerY);
     }];
     [super updateConstraints];
 }
 
 @end
-
-
-#pragma mark - FFCommentsCell
 
 @implementation FFCommentsCell
 
@@ -159,12 +158,14 @@
         [self.contentView addSubview:_avatarImageView];
         
         _nameLabel = [UILabel new];
-        _nameLabel.font = [UIFont fontWithName:@"SanFranciscoDisplay-Medium" size:14];
+        _nameLabel.font = [UIFont systemFontOfSize:14];
         [self.contentView addSubview:_nameLabel];
         
         _eventLabel = [UILabel new];
         _eventLabel.textColor = [UIColor grayColor];
-        _eventLabel.font = [UIFont fontWithName:@"SanFranciscoDisplay-Medium" size:13];
+        _eventLabel.font = [UIFont systemFontOfSize:13];
+        _eventLabel.adjustsFontSizeToFitWidth = NO;
+        _eventLabel.numberOfLines = 0;
         [self.contentView addSubview:_eventLabel];
     }
     return self;
@@ -176,24 +177,27 @@
         make.top.equalTo(contentView.mas_top).with.offset(11);
         make.size.equalTo(@38);
         make.left.equalTo(contentView.mas_left).with.offset(16);
+        make.bottom.lessThanOrEqualTo(contentView.mas_bottom).with.offset(-11);
     }];
     [_nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(_avatarImageView.mas_right).with.offset(8);
         make.top.equalTo(contentView.mas_top).with.offset(14);
-        make.right.equalTo(contentView.mas_right).with.offset(8);
+        make.right.equalTo(contentView.mas_right).with.offset(-8);
+        make.height.equalTo(@16);
     }];
     [_eventLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(_avatarImageView.mas_right).with.offset(8);
-        make.top.equalTo(_nameLabel.mas_bottom).with.offset(1);
-        make.right.equalTo(contentView.mas_right).with.offset(8);
-        make.height.equalTo(@16);
+        make.top.equalTo(_nameLabel.mas_bottom).with.offset(30);
+        make.right.equalTo(contentView.mas_right).with.offset(-8);
+        make.bottom.equalTo(contentView.mas_bottom).with.offset(-14);
     }];
-    
     [super updateConstraints];
 }
 
 -(void) prepareForReuse {
-    
+    self.avatarImageView.image = nil;
+    self.nameLabel.text = nil;
+    self.eventLabel.text = nil;
 }
 
 @end

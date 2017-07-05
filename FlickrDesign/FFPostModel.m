@@ -6,34 +6,31 @@
 //  Copyright © 2017 ilya. All rights reserved.
 //
 
-//Facade --- Both (loadimgforentity)
-
 #import "FFPostModel.h"
 #import "FFItem.h"
-#import "FFStorageProtocol.h"
-#import "FFNetworkProtocol.h"
-#import "FFFacade.h"
+#import "Human.h"
+#import "Comment.h"
+#import "FFImageDownloader.h"
+#import "FFMetadataLoadOperation.h"
 @import UIKit;
 
 static NSString *const kItemEntity = @"FFItem";
 
 @interface FFPostModel ()
 
-@property (nonatomic, strong, readonly) FFFacade *facade;
 @property (nonatomic, strong) FFItem *selectedItem;
-@property (nonatomic, strong, readonly) id<FFStorageProtocol> storageService;
-@property (nonatomic, strong, readonly) id<FFNetworkProtocol> networkManager;
+@property (nonatomic, strong) FFImageDownloader *imageDownloader;
 
 @end
 
 @implementation FFPostModel
 
--(instancetype) initWithFacade: (FFFacade *)facade {
+-(instancetype) initWithNetworkManager: (id<FFNetworkProtocol>)networkManager storageService: (id<FFStorageProtocol>)storageService {
     self = [super init];
     if (self) {
-        _facade = facade;
-        _storageService = facade.storageService;
-        _networkManager = facade.networkManager;
+        _storageService = storageService;
+        _networkManager = networkManager;
+        _imageDownloader = [[FFImageDownloader alloc] initWithNetworkManager:_networkManager storageService:_storageService];
     }
     return self;
 }
@@ -52,7 +49,15 @@ static NSString *const kItemEntity = @"FFItem";
 }
 
 -(void) loadImageForItem: (FFItem *)item withCompletionHandler: (void (^)(void))completionHandler {
-    [self.facade loadImageForEntity:kItemEntity withIdentifier:item.identifier forURL:item.largePhotoURL forAttribute:@"largePhoto" withCompletionHandler:completionHandler];
+    [self.imageDownloader loadImageForEntity:kItemEntity withIdentifier:item.identifier forURL:item.largePhotoURL forAttribute:@"largePhoto" withCompletionHandler:completionHandler];
+}
+
+-(void) getMetadataForSelectedItemWithCompletionHandler:(voidBlock)completionHandler {
+    FFMetadataLoadOperation *loadOperation = [[FFMetadataLoadOperation alloc] initWithItem:self.selectedItem storageService:self.storageService networkManager:self.networkManager];
+    loadOperation.completionBlock = completionHandler;
+    NSOperationQueue *queue = [NSOperationQueue new];
+    queue.qualityOfService = QOS_CLASS_DEFAULT;
+    [queue addOperation:loadOperation];
 }
 
 @end
