@@ -13,8 +13,8 @@
 @class FFItem;
 
 typedef NS_ENUM(NSUInteger, FFCommentType) {
-    FFCommentTypeComment,
-    FFCommentTypeLike
+    FFCommentTypeComment = 0,
+    FFCommentTypeLike = 1
 };
 
 @interface Comment : NSManagedObject

@@ -11,7 +11,7 @@
 
 @implementation Comment
 
-@dynamic commentType;
+@synthesize commentType;
 @dynamic text;
 @dynamic author;
 @dynamic item;
